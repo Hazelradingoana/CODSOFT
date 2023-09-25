@@ -1,4 +1,4 @@
-package src.main.java.AtmInterface;
+package ATMinterface;
 
 import java.util.Scanner;
 
@@ -9,11 +9,11 @@ public class run {
     public static void main(String args[]){
         GetInput();
     }
-    
+
     public static void GetInput() {
         Scanner scanner = new Scanner(System.in);
         int command;
-    
+
         do {
             System.out.println("1.Withdrawing ");
             System.out.println("2.Depositing ");
@@ -21,7 +21,7 @@ public class run {
             System.out.println("4.Cancel ");
             System.out.println("What would you like to do (1 - 4):");
             command = scanner.nextInt();
-    
+
             switch (command) {
                 case 1:
                     System.out.print("How much would you like to withdraw? ");
@@ -45,7 +45,7 @@ public class run {
         } while (command != 4);
     }
 
-  
+
 
     public static int withdrawing(int Amount){
 
@@ -61,10 +61,10 @@ public class run {
     }
 
     public static int depositing(int Amount){
-            AccountBalance += Amount;
-            System.out.println("You've deposited R"+Amount+".00");
+        AccountBalance += Amount;
+        System.out.println("You've deposited R"+Amount+".00");
 
-            return AccountBalance;
+        return AccountBalance;
     }
 
     public static void CheckBalance(){

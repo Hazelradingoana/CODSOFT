@@ -1,89 +1,137 @@
-package src.main.java.StudentGradeCalculator;
-
-import java.util.Scanner;
+package StudentGradeCalculator;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Calculator {
 
-    public static void main(String[] args)  {
-       int AveragePercentage =  StudentInput();
-       StudentGrade(AveragePercentage);
-        
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Student Grade Calculator");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(500, 500);
+
+            SpringLayout layout = new SpringLayout();
+            JPanel panel = new JPanel(layout);
+            frame.add(panel);
+
+            String[] subjects = {
+                "Physical Science", "Life Science", "Accounting",
+                "Mathematics", "English", "Computer Application Technology"
+            };
+
+            JTextField[] subjectTextFields = new JTextField[subjects.length];
+            JLabel[] errorLabels = new JLabel[subjects.length];
+
+            for (int i = 0; i < subjects.length; i++) {
+                JLabel label = new JLabel(subjects[i] + ":");
+                JTextField textField = new JTextField(10);
+                JLabel errorLabel = new JLabel("");
+                panel.add(label);
+                panel.add(textField);
+                panel.add(errorLabel);
+
+                subjectTextFields[i] = textField;
+                errorLabels[i] = errorLabel;
+
+                // Set constraints for the label
+                layout.putConstraint(SpringLayout.WEST, label, 10, SpringLayout.WEST, panel);
+                layout.putConstraint(SpringLayout.NORTH, label, 20 + (i * 30), SpringLayout.NORTH, panel);
+
+                // Set constraints for the text field
+                layout.putConstraint(SpringLayout.WEST, textField, 260, SpringLayout.WEST, panel);
+                layout.putConstraint(SpringLayout.NORTH, textField, 20 + (i * 30), SpringLayout.NORTH, panel);
+
+                // Set constraints for the error label
+                layout.putConstraint(SpringLayout.WEST, errorLabel, 10, SpringLayout.EAST, textField);
+                layout.putConstraint(SpringLayout.NORTH, errorLabel, 20 + (i * 30), SpringLayout.NORTH, panel);
+
+                // textField.addActionListener(new ActionListener() {
+                //     @Override
+                //     public void actionPerformed(ActionEvent e) {
+                //         JTextField source = (JTextField) e.getSource();
+                //         try {
+                //             int input = Integer.parseInt(source.getText());
+                //             if (input < 0 || input > 100) {
+                //                 errorLabel.setText("Input must be between 0 and 100");
+                //                 source.setText("");
+                //             } else {
+                //                 errorLabel.setText("");
+                //             }
+                //         } catch (NumberFormatException ex) {
+                //             errorLabel.setText("Invalid input. Please enter a number.");
+                //             source.setText(""); 
+                //         }
+                //     }
+                // }
+                // );
+            }
+
+            JButton calculateButton = new JButton("Calculate");
+            panel.add(calculateButton);
+
+            // Set constraints for the Calculate button
+            layout.putConstraint(SpringLayout.WEST, calculateButton, 10, SpringLayout.WEST, panel);
+            layout.putConstraint(SpringLayout.NORTH, calculateButton, 30 + (subjects.length * 30), SpringLayout.NORTH, panel);
+
+            calculateButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int[] subjectMarks = new int[subjects.length];
+                    boolean validInput = true;
+                    for (int i = 0; i < subjects.length; i++) {
+                        try {
+                            int input = Integer.parseInt(subjectTextFields[i].getText());
+                            if (input < 0 || input > 100) {
+                                errorLabels[i].setText("Input must be between 0 and 100");
+                                
+                                validInput = false;
+                                
+                            } else {
+                                errorLabels[i].setText("");
+                                subjectMarks[i] = input;
+                            }
+                        } catch (NumberFormatException ex) {
+                            errorLabels[i].setText("Invalid input. Please enter a number.");
+                            validInput = false;
+                        }
+                    }
+
+                    if (validInput) {
+                        int averagePercentage = calculateAveragePercentage(subjectMarks);
+                        StudentGrade(averagePercentage);
+                    }
+                }
+            });
+
+            frame.setVisible(true);
+        });
     }
 
-
-    public static int StudentInput(){
-
-        Scanner scanner = new Scanner(System.in);
-        int PS,LS,Acc,Math,Eng,cat;
-
-        System.out.println("Please enter the obtained marks (Out of 100) for the following subjects: ");
-        do {
-            System.out.print("Physical Science: ");
-            PS = scanner.nextInt();
-        } while (PS < 0 || PS > 100); 
-        
-        do {
-            System.out.print("Life Science: ");
-            LS = scanner.nextInt();
-        } while (LS < 0 || LS > 100); 
-        do {
-            System.out.print("Accounting: ");
-            Acc = scanner.nextInt();
-        } while (Acc < 0 || Acc > 100);
-        
-        do {
-            System.out.print("Mathematics: ");
-            Math = scanner.nextInt();
-        } while (Math < 0 || Math > 100);
-        do {
-            System.out.print("English: ");
-            Eng = scanner.nextInt();
-        } while (Eng < 0 || Eng > 100);
-        
-        do {
-            System.out.print("Computer Application Technology: ");
-            cat = scanner.nextInt();
-        } while (cat < 0 || cat > 100);
-
-        System.out.println("\nYour results are as follows: ");
-        System.out.println("1.Physical Science: "+PS);
-        System.out.println("2.Life Science: "+LS);
-        System.out.println("3. Accounting: "+Acc);
-        System.out.println("4.Mathematics: "+Math);
-        System.out.println("5.English: "+Eng);
-        System.out.println("6.Computer Application Technology: "+cat);
-
-
-        int Marks = PS +LS  + Acc + Math + Eng +cat; 
-        System.out.println("Your overall Mark is "+Marks+ "out of 600 for the 6 subjects");       
-        int AveragePercentage = (Marks * 100) / 600;
-        System.out.println("Your Average Percentage is "+AveragePercentage);
-        scanner.close();       
-        return AveragePercentage;
-
-
-    }
-
-    public static void StudentGrade(int AveragePercentage){
-
-        if(AveragePercentage >=90){
-            System.out.println("You got A+");
-        }else if (AveragePercentage >=80){
-            System.out.println("You got A");
-
-        }else if (AveragePercentage >=70){
-            System.out.println("You got B");
-
-        }else if (AveragePercentage >=60){
-            System.out.println("You got C");
-
-        }else if (AveragePercentage >=50){
-            System.out.println("You got D");
-
-        }else{
-            System.out.println("You FAILED");
-        
+    public static int calculateAveragePercentage(int[] subjectMarks) {
+        int totalMarks = 0;
+        for (int marks : subjectMarks) {
+            totalMarks += marks;
         }
+        return (totalMarks * 100) / (subjectMarks.length * 100);
     }
-    
+
+    public static void StudentGrade(int averagePercentage) {
+        String grade;
+        if (averagePercentage >= 90) {
+            grade = "You got A+";
+        } else if (averagePercentage >= 80) {
+            grade = "You got A";
+        } else if (averagePercentage >= 70) {
+            grade = "You got B";
+        } else if (averagePercentage >= 60) {
+            grade = "You got C";
+        } else if (averagePercentage >= 50) {
+            grade = "You got D";
+        } else {
+            grade = "You FAILED";
+        }
+
+        JOptionPane.showMessageDialog(null, grade, "Grade Result", JOptionPane.INFORMATION_MESSAGE);
+    }
 }

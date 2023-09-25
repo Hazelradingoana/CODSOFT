@@ -6,13 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "LoginPage",
-            "request": "launch",
-            "mainClass": "StudentRegistration.LoginPage",
-            "projectName": "codsoft"
-        },
-        {
-            "type": "java",
             "name": "login",
             "request": "launch",
             "mainClass": "src.main.java.QuizApp.login",
